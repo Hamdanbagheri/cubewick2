@@ -298,7 +298,7 @@ p{line-height:1.4;margin:5px 0 11px}
         <div class="page-title"><h1>Help</h1><p>Frequently asked questions.</p></div>
         <div class="listing"><h3>How do I create an account?</h3><p>Press Sign Up, choose a username and password, then submit the form.</p></div>
         <div class="listing"><h3>Can other people log in to this account?</h3><p>Not yet. The demo account is saved in this browser only. Public accounts need a secure server and database.</p></div>
-        <div class="listing"><h3>Can the website change my avatar?</h3><p>The connected desktop build listens on this PC for avatar color changes from the website. Start the game, sign in to the local profile, then use Avatar Appearance.</p></div>
+        <div class="listing"><h3>Can the website change my avatar?</h3><p>The connected desktop build listens on this PC for avatar color and hat changes from the website. Start the game, sign in to the local profile, then use Avatar Appearance.</p></div>
         <div class="listing"><h3>Can I launch the game from this site?</h3><p>The desktop EXE download and launch flow haven't been connected yet.</p></div>
       </section>
     </main>
@@ -321,6 +321,7 @@ p{line-height:1.4;margin:5px 0 11px}
   const POSTS_KEY = "cubewick_demo_forum_v1";
   const FAV_KEY = "cubewick_demo_favorites_v1";
   const AVATAR_COLOR_KEY = "cubewick_avatar_color_v1";
+  const AVATAR_HAT_KEY = "cubewick_avatar_hat_v1";
   const AVATAR_BRIDGE = "http://127.0.0.1:47821";
   let avatarSendTimer = null;
   const $ = (id) => document.getElementById(id);
@@ -471,7 +472,7 @@ p{line-height:1.4;margin:5px 0 11px}
     page("profile");
     toast("Welcome back, " + currentUser + "!");
   });
-  $("topSignup").addEventListener("click", signup);
+  // refreshAccountUI assigns the correct Sign Up or My Profile action.
   $("sideSignup").addEventListener("click", signup);
   $("homeSignup").addEventListener("click", signup);
   $("forgotBtn").addEventListener("click", () => showDialog("Password Help", '<p>This local demo has no email reset service. If you forget the demo password, you can clear the site data and create a new demo account.</p><div class="form-actions"><button type="button" id="closePasswordHelp">Close</button></div>'));
@@ -511,6 +512,19 @@ p{line-height:1.4;margin:5px 0 11px}
       }
       const savedColor = localStorage.getItem(AVATAR_COLOR_KEY);
       if (savedColor) await transmitAvatarColor(savedColor);
+
+      const hatPicker = $("avatarHat");
+      const savedHat = localStorage.getItem(AVATAR_HAT_KEY);
+      if (hatPicker) {
+        if (savedHat !== null) {
+          hatPicker.value = savedHat;
+          await transmitAvatarHat(savedHat);
+        } else if (!hatPicker.dataset.userChanged && data.hat !== undefined) {
+          const gameHat = String(Math.max(0, Math.min(5, Number(data.hat) || 0)));
+          hatPicker.value = gameHat;
+          localStorage.setItem(AVATAR_HAT_KEY, gameHat);
+        }
+      }
       return true;
     } catch (_) {
       status.className = "notice";
@@ -547,6 +561,38 @@ p{line-height:1.4;margin:5px 0 11px}
     }
   }
 
+  async function transmitAvatarHat(hatId) {
+    const status = $("avatarBridgeStatus");
+    const numericHat = Math.max(0, Math.min(5, Number.parseInt(hatId, 10) || 0));
+    localStorage.setItem(AVATAR_HAT_KEY, String(numericHat));
+    if (status) {
+      status.className = "notice";
+      status.textContent = "Sending hat to CUBEWICK...";
+    }
+    try {
+      const response = await fetch(`${AVATAR_BRIDGE}/setHat?hat=${numericHat}`, {
+        method: "GET", cache: "no-store", mode: "cors"
+      });
+      if (!response.ok) throw new Error("Bridge returned an error");
+      const data = await response.json();
+      if (!data.ok) throw new Error("The game did not accept this hat");
+      if (status) {
+        status.className = "success";
+        const selector = $("avatarHat");
+        const name = selector && selector.selectedOptions.length
+          ? selector.selectedOptions[0].textContent : "Hat";
+        status.textContent = name + " applied to the running CUBEWICK character!";
+      }
+      return true;
+    } catch (_) {
+      if (status) {
+        status.className = "error";
+        status.textContent = "Couldn't reach CUBEWICK. Start the connected game on this PC, then choose Wear Hat again.";
+      }
+      return false;
+    }
+  }
+
   function renderProfile() {
     const root = $("profileContent");
     const acct = currentAccount();
@@ -564,13 +610,25 @@ p{line-height:1.4;margin:5px 0 11px}
       <hr class="rule">
       <div class="text-panel blue">
         <h2>Avatar Appearance</h2>
-        <p>Choose a character color. With CUBEWICK running on this same computer using the connected build, the color will update in-game.</p>
+        <p>Choose your body color and hat. With the connected CUBEWICK game running on this same computer, both changes update the character in-game.</p>
         <div class="account-line">
           <label for="avatarColor"><b>Avatar Color:</b></label>
           <input id="avatarColor" type="color" value="${cleanText(localStorage.getItem(AVATAR_COLOR_KEY) || "#2f71d5")}" style="width:62px;height:36px;padding:2px;cursor:pointer">
           <span id="avatarHex" style="font-weight:bold">${cleanText(localStorage.getItem(AVATAR_COLOR_KEY) || "#2f71d5")}</span>
           <button type="button" class="small" id="applyAvatarColor">Apply Color</button>
           <button type="button" class="secondary small" id="checkAvatarConnection">Check Game</button>
+        </div>
+        <div class="account-line" style="margin-top:8px">
+          <label for="avatarHat"><b>Hat:</b></label>
+          <select id="avatarHat" style="min-width:175px;padding:6px">
+            <option value="0">No Hat</option>
+            <option value="1">Classic Red Cap</option>
+            <option value="2">Black Top Hat</option>
+            <option value="3">Gold Crown</option>
+            <option value="4">Blue Beanie</option>
+            <option value="5">Party Hat</option>
+          </select>
+          <button type="button" class="small" id="applyAvatarHat">Wear Hat</button>
         </div>
         <div id="avatarBridgeStatus" class="notice" role="status">Checking for CUBEWICK...</div>
         <p class="muted">For now, the website and game must be open on the same PC. A public hosted website will need a secure account/server connection for remote syncing.</p>
@@ -591,6 +649,17 @@ p{line-height:1.4;margin:5px 0 11px}
       avatarSendTimer = setTimeout(() => transmitAvatarColor(avatarPicker.value), 180);
     });
     $("applyAvatarColor").addEventListener("click", () => transmitAvatarColor(avatarPicker.value));
+    const hatPicker = $("avatarHat");
+    if (hatPicker) {
+      const savedHat = localStorage.getItem(AVATAR_HAT_KEY);
+      if (savedHat !== null) hatPicker.value = savedHat;
+      hatPicker.addEventListener("change", () => {
+        hatPicker.dataset.userChanged = "1";
+        localStorage.setItem(AVATAR_HAT_KEY, hatPicker.value);
+        transmitAvatarHat(hatPicker.value);
+      });
+      $("applyAvatarHat").addEventListener("click", () => transmitAvatarHat(hatPicker.value));
+    }
     $("checkAvatarConnection").addEventListener("click", checkAvatarBridge);
     checkAvatarBridge();
     $("profileLogout").addEventListener("click", logout);
