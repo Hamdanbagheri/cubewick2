@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CUBEWICK — The Classic Building World</title>
+<style>
+:root{
+  --blue:#759bc4;
+  --blue-dark:#456b96;
+  --line:#111;
+  --panel:#ededed;
+  --soft:#d7d7d7;
+  --yellow:#ffcf26;
+  --text:#252525;
+  --link:#174f91;
+}
+*{box-sizing:border-box}
+html{background:#fff}
+body{
+  margin:0;
+  color:var(--text);
+  background:#fff;
+  font:13px "Comic Sans MS","Comic Sans",Arial,sans-serif;
+}
+a{color:var(--link);cursor:pointer}
+button,input,textarea,select{font:13px "Comic Sans MS","Comic Sans",Arial,sans-serif}
+button,a.button{
+  cursor:pointer;
+  border:1px solid #141414;
+  border-radius:7px;
+  padding:8px 14px;
+  color:#111;
+  background:linear-gradient(#ffdf4a,#ffc91e);
+  font-size:15px;
+  font-weight:bold;
+  text-decoration:none;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55);
+}
+button:hover,a.button:hover{background:linear-gradient(#ffe97e,#ffd33a)}
+button:active,a.button:active{transform:translateY(1px);box-shadow:none}
+button.secondary{background:linear-gradient(#f7f7f7,#dcdcdc);border-color:#888;font-weight:normal}
+button.small{padding:4px 10px;font-size:12px;border-radius:3px}
+input,textarea,select{
+  background:white;border:2px inset #ddd;padding:6px 7px;min-width:0;color:#222;
+}
+input:focus,textarea:focus,select:focus{outline:2px solid #8ebbe3;outline-offset:1px}
+textarea{resize:vertical}
+.site{width:min(920px,calc(100% - 18px));margin:20px auto 12px}
+.top{
+  min-height:72px;border:1px solid #111;
+  background:#555c50;
+  display:flex;align-items:center;gap:18px;padding:8px 10px;
+  position:relative;overflow:hidden;
+  background-image:linear-gradient(90deg,#6b6b61,#465b4c 56%,#7d8a61);
+}
+.brand{min-width:190px;color:#fff;text-decoration:none;display:block;line-height:1}
+.brand .name{
+  font-family:"Comic Sans MS","Comic Sans",Arial,sans-serif;
+  display:block;font-weight:bold;letter-spacing:-1px;
+  color:#fff;font-size:36px;text-shadow:2px 2px #222,-1px -1px #222;
+}
+.brand .tagline{display:block;font-size:11px;color:#fff;margin-top:5px}
+.top-note{flex:1;color:#f4f4f4;font-size:12px;align-self:flex-end;padding-bottom:5px}
+.top-cta{white-space:nowrap;min-width:220px;text-align:center;font-size:19px!important;padding:8px 12px!important}
+.nav{
+  display:flex;flex-wrap:wrap;gap:0;justify-content:center;
+  border:1px solid #182334;border-top:0;background:var(--blue);
+  padding:6px 5px;color:#fff;
+}
+.nav a{color:#fff;text-decoration:none;font-size:15px;padding:3px 9px;border-right:1px solid rgba(255,255,255,.75)}
+.nav a:last-child{border-right:0}
+.nav a:hover{text-decoration:underline;background:#5e83ab}
+.layout{display:grid;grid-template-columns:152px minmax(0,1fr);gap:11px;margin-top:10px}
+.sidebar{min-width:0}
+.box{border:1px solid #222;background:#fff;margin-bottom:10px}
+.box-head{background:#c8c8c8;border-bottom:1px solid #222;padding:5px 7px;font-weight:bold;font-size:13px}
+.box-body{padding:8px}
+.form-field{display:flex;flex-direction:column;gap:3px;margin-bottom:7px}
+.form-field label{font-weight:bold;font-size:12px}
+.form-field input{width:100%;height:25px}
+.form-actions{display:flex;gap:5px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:7px}
+.muted{color:#666;font-size:11px}
+.main{min-width:0}
+.hero{
+  background:var(--panel);border:1px solid #222;padding:10px;
+  min-height:400px;
+}
+h1{font-size:27px;margin:0 0 4px;font-weight:normal;color:#252b32}
+h2{font-size:18px;margin:0 0 7px}
+h3{font-size:15px;margin:0 0 5px}
+p{line-height:1.4;margin:5px 0 11px}
+.rule{border:0;border-top:1px solid #bbb;margin:10px 0}
+.home-grid{display:grid;grid-template-columns:minmax(0,1fr) 1fr;gap:12px;margin-top:12px}
+.feature{display:grid;grid-template-columns:48px minmax(0,1fr);gap:8px;margin-bottom:16px}
+.stepnum{
+  width:46px;height:46px;border:1px solid #222;background:linear-gradient(135deg,#e7f4ff,#8faac6);
+  display:grid;place-items:center;font:bold 27px Georgia,serif;color:#233c56;
+  box-shadow:inset 0 0 0 3px #fff;
+}
+.feature h3{font-size:15px;margin:0 0 3px}
+.feature p{margin:0;font-size:12px;color:#444}
+.text-panel{
+  border:1px solid #999;background:#fff;padding:10px;margin-bottom:10px;
+}
+.text-panel.blue{background:#e2edf8;border-color:#7c9fbe}
+.text-panel.owner{border-left:5px solid #759bc4}
+.owner-label{font-weight:bold;color:#315679;font-size:14px;margin-bottom:5px}
+.big-cta{display:block;text-align:center;padding:11px!important;font-size:19px!important}
+.home-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.listing{border:1px solid #b0b0b0;background:#fff;padding:10px;margin:8px 0}
+.listing h3{margin-bottom:4px}
+.tag{display:inline-block;background:#dce8f4;border:1px solid #9bb2c9;padding:2px 5px;font-size:10px;margin-right:4px}
+.page-title{padding-bottom:7px;border-bottom:1px solid #b5b5b5;margin-bottom:10px}
+.notice{padding:7px 9px;background:#fff8cf;border:1px solid #c9ab40;margin:8px 0}
+.success{padding:7px 9px;background:#e3f3df;border:1px solid #87b27f;margin:8px 0}
+.error{padding:7px 9px;background:#fbe5e5;border:1px solid #c88888;margin:8px 0}
+.hidden{display:none!important}
+.account-line{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.footer{border-top:1px solid #aaa;margin-top:10px;padding:8px 5px;text-align:center;color:#666;font-size:10px}
+.footer a{color:#315d8c}
+.listing button{margin-top:5px}
+.profile-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.stat{background:#f8f8f8;border:1px solid #ccc;padding:8px;text-align:center}
+.stat b{display:block;font-size:18px}
+.dialog-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:15px;z-index:10}
+.dialog{width:min(420px,100%);background:#eee;border:1px solid #111;box-shadow:0 4px 18px #0008}
+.dialog-head{background:#759bc4;padding:8px 10px;font-weight:bold;border-bottom:1px solid #222;display:flex;justify-content:space-between}
+.dialog-body{padding:12px;background:#eee}
+.close-x{border:0;background:transparent;font-size:18px;padding:0 3px;color:#111;box-shadow:none}
+.mobile-header{display:none}
+@media(max-width:650px){
+ .site{width:calc(100% - 12px);margin:6px auto}
+ .top{flex-wrap:wrap;gap:5px}
+ .brand{min-width:0;flex:1}
+ .brand .name{font-size:29px}
+ .top-note{display:none}
+ .top-cta{min-width:120px;font-size:14px!important}
+ .layout{grid-template-columns:1fr}
+ .sidebar{display:grid;grid-template-columns:1fr 1fr;gap:7px;align-items:start}
+ .box{margin-bottom:0}
+ .home-grid{grid-template-columns:1fr}
+ .hero{min-height:0}
+ .nav a{font-size:13px;padding:5px 7px}
+ h1{font-size:24px}
+}
+</style>
+</head>
+<body>
+<div class="site">
+  <header class="top">
+    <a class="brand" href="#" data-page="home" aria-label="CUBEWICK home">
+      <span class="name">CUBEWICK</span>
+      <span class="tagline">The Classic Building World</span>
+    </a>
+    <div class="top-note" id="topNote">Build places. Play alone. Make something classic.</div>
+    <button class="top-cta" id="topSignup">Sign Up and Play &gt;</button>
+  </header>
+
+  <nav class="nav" aria-label="Main navigation">
+    <a href="#" data-page="profile">My CUBEWICK</a>
+    <a href="#" data-page="games">Games</a>
+    <a href="#" data-page="catalog">Catalog</a>
+    <a href="#" data-page="membership">Builder's Club</a>
+    <a href="#" data-page="browse">Browse</a>
+    <a href="#" data-page="forum">Forum</a>
+    <a href="#" data-page="news">News</a>
+    <a href="#" data-page="parents">Parents</a>
+    <a href="#" data-page="help">Help</a>
+  </nav>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <section class="box" id="loginBox">
+        <div class="box-head" id="loginHeading">Member Login</div>
+        <div class="box-body">
+          <form id="loginForm">
+            <div class="form-field"><label for="loginUser">Character Name</label><input id="loginUser" name="username" autocomplete="username" required maxlength="20"></div>
+            <div class="form-field"><label for="loginPass">Password</label><input id="loginPass" name="password" type="password" autocomplete="current-password" required></div>
+            <div class="form-actions"><button type="submit" class="small">Login</button></div>
+          </form>
+          <div class="form-actions"><button type="button" class="secondary small" id="forgotBtn">Forgot your password?</button></div>
+          <div id="loginMessage" aria-live="polite"></div>
+        </div>
+      </section>
+      <section class="box" id="accountBox">
+        <div class="box-head">Join CUBEWICK</div>
+        <div class="box-body">
+          <p>Make an account and get your own classic profile.</p>
+          <button type="button" id="sideSignup" class="big-cta" style="width:100%">Sign Up!</button>
+          <p class="muted" style="margin-top:7px">Free account • Single-player game</p>
+        </div>
+      </section>
+      <section class="box">
+        <div class="box-head">CUBEWICK News</div>
+        <div class="box-body">
+          <b>From the owner</b>
+          <p style="margin-bottom:0">Welcome to CUBEWICK. We're building a little corner of the internet with the feel of the classic building-game days.</p>
+        </div>
+      </section>
+    </aside>
+
+    <main class="main">
+      <section class="hero" id="page-home">
+        <h1>CUBEWICK Virtual Playworld</h1>
+        <h2>CUBEWICK is classic!</h2>
+        <div class="home-grid">
+          <div>
+            <div class="feature">
+              <div class="stepnum">1</div>
+              <div><h3>Build your own place</h3><p>Create a world, arrange bricks, and make somewhere of your own.</p></div>
+            </div>
+            <div class="feature">
+              <div class="stepnum">2</div>
+              <div><h3>Explore classic worlds</h3><p>Try the CUBEWICK single-player client and discover old-school block building.</p></div>
+            </div>
+            <div class="feature">
+              <div class="stepnum">3</div>
+              <div><h3>Make a profile</h3><p>Choose a character name and keep your CUBEWICK identity in one place.</p></div>
+            </div>
+            <div class="text-panel owner">
+              <div class="owner-label">A note from the owner</div>
+              Welcome to CUBEWICK. This project is being built to celebrate the simple look and feel of classic 2000s building games. Thanks for checking it out.
+              <div style="text-align:right;margin-top:6px"><b>— The CUBEWICK owner</b></div>
+            </div>
+            <div class="home-actions">
+              <button type="button" id="homeSignup">Create an Account</button>
+              <button type="button" class="secondary" data-page="games">Explore Games</button>
+            </div>
+          </div>
+          <div>
+            <div class="text-panel" style="min-height:240px;background:#dfe9e0;border-color:#718773">
+              <div style="font-size:20px;text-align:center;margin:13px 0 12px;color:#26482e;font-weight:bold">BUILD IT YOUR WAY</div>
+              <hr class="rule">
+              <p style="font-size:15px;text-align:center;color:#243b2b">Small bricks. Big ideas.</p>
+              <div style="border:1px solid #809581;background:#f5f7f3;padding:12px;margin-top:25px;text-align:center">
+                <b>THE CLASSIC BUILDING WORLD</b>
+                <p style="margin-bottom:0">No giant banner. No modern cards. Just CUBEWICK.</p>
+              </div>
+            </div>
+            <a class="button big-cta" style="width:100%" href="CUBEWICK_Player_Folder.zip" download="CUBEWICK_Player_Folder.zip">Download CUBEWICK</a>
+            <p class="muted" style="text-align:center">The desktop EXE download will be connected here when it's ready.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="hero hidden" id="page-profile">
+        <div class="page-title"><h1>My CUBEWICK</h1><p>My account, my character name, my classic page.</p></div>
+        <div id="profileContent"></div>
+      </section>
+      <section class="hero hidden" id="page-games">
+        <div class="page-title"><h1>Games</h1><p>Classic game projects from CUBEWICK.</p></div>
+        <div class="listing"><span class="tag">IN DEVELOPMENT</span><h3>CUBEWICK Classic World</h3><p>Explore a block-built world with the classic character, free camera, and old-school feel.</p><button type="button" data-toast="The CUBEWICK desktop client isn't connected to the website yet.">Play Solo</button></div>
+        <div class="listing"><span class="tag">PROTOTYPE</span><h3>Volcanic Planet</h3><p>A small lava-planet level inspired by early block-building games.</p><button type="button" data-toast="The Volcanic Planet level is part of the desktop client prototype.">View Details</button></div>
+        <div class="notice">CUBEWICK is currently single-player. These listings are local site demo entries, not online multiplayer servers.</div>
+      </section>
+      <section class="hero hidden" id="page-catalog">
+        <div class="page-title"><h1>Catalog</h1><p>Browse the things that make up a classic world.</p></div>
+        <div class="listing"><h3>Classic Brick</h3><p>Category: Building Parts · Made for world building.</p><button type="button" data-toast="Classic Brick added to your demo favorites.">Favorite</button></div>
+        <div class="listing"><h3>Volcanic Rock</h3><p>Category: Terrain · A dark stone for lava-planet builds.</p><button type="button" data-toast="Volcanic Rock added to your demo favorites.">Favorite</button></div>
+        <div class="listing"><h3>Old Studded Plate</h3><p>Category: Building Parts · A classic studded surface.</p><button type="button" data-toast="Old Studded Plate added to your demo favorites.">Favorite</button></div>
+      </section>
+      <section class="hero hidden" id="page-membership">
+        <div class="page-title"><h1>Builder's Club</h1><p>A classic-style membership page.</p></div>
+        <div class="text-panel"><h2>Build more. Keep it classic.</h2><p>Membership perks are not active yet. This page is a visual and interactive prototype only.</p><button type="button" data-toast="Membership purchases are not enabled in this prototype.">Learn About Membership</button></div>
+      </section>
+      <section class="hero hidden" id="page-browse">
+        <div class="page-title"><h1>Browse Places</h1><p>Find somewhere to explore.</p></div>
+        <label for="browseFilter"><b>Find a place:</b></label>
+        <input id="browseFilter" type="search" placeholder="Search CUBEWICK places..." style="width:min(100%,360px)">
+        <div id="browseResults">
+          <div class="listing" data-search="classic world building bricks"><h3>CUBEWICK Classic World</h3><p>A world for building and testing the classic game.</p><button type="button" data-toast="This place opens in the CUBEWICK desktop client when connected.">View Place</button></div>
+          <div class="listing" data-search="volcanic planet lava bridge"><h3>Volcanic Planet</h3><p>Dark structures, lava, and narrow bridges.</p><button type="button" data-toast="This place opens in the CUBEWICK desktop client when connected.">View Place</button></div>
+          <div class="listing" data-search="starter home house bricks"><h3>Starter Place</h3><p>A simple block-built starter world.</p><button type="button" data-toast="This place opens in the CUBEWICK desktop client when connected.">View Place</button></div>
+        </div>
+        <p id="noBrowseResults" class="muted hidden">No places matched that search.</p>
+      </section>
+      <section class="hero hidden" id="page-forum">
+        <div class="page-title"><h1>Forum</h1><p>A tiny local message board for the prototype.</p></div>
+        <div class="notice">Posts are stored in this browser only. They are not shared with other visitors.</div>
+        <form id="forumForm" class="text-panel">
+          <div class="form-field"><label for="forumTitle">Topic</label><input id="forumTitle" maxlength="70" required placeholder="What's on your mind?"></div>
+          <div class="form-field"><label for="forumBody">Message</label><textarea id="forumBody" rows="3" maxlength="500" required placeholder="Write a message..."></textarea></div>
+          <button type="submit">Post Message</button>
+        </form>
+        <div id="forumPosts"></div>
+      </section>
+      <section class="hero hidden" id="page-news">
+        <div class="page-title"><h1>News</h1><p>Updates from the CUBEWICK workshop.</p></div>
+        <div class="listing"><span class="tag">SITE</span><h3>The CUBEWICK website prototype is open</h3><p>A classic-inspired text-first design is taking shape. Account features currently run only in this browser.</p></div>
+        <div class="listing"><span class="tag">GAME</span><h3>Single-player worlds</h3><p>Current development is focused on the standalone game, world building, and saving player-created places.</p></div>
+      </section>
+      <section class="hero hidden" id="page-parents">
+        <div class="page-title"><h1>Parents</h1><p>Information about the CUBEWICK project.</p></div>
+        <div class="text-panel"><h2>What is CUBEWICK?</h2><p>CUBEWICK is an independent single-player game project inspired by classic block-building games. This prototype site does not process payments or collect information on a public server.</p><h3>Privacy note</h3><p>The demo account data and forum posts are stored in your browser's local storage on this device. Clearing browser storage removes them.</p></div>
+      </section>
+      <section class="hero hidden" id="page-help">
+        <div class="page-title"><h1>Help</h1><p>Frequently asked questions.</p></div>
+        <div class="listing"><h3>How do I create an account?</h3><p>Press Sign Up, choose a username and password, then submit the form.</p></div>
+        <div class="listing"><h3>Can other people log in to this account?</h3><p>Not yet. The demo account is saved in this browser only. Public accounts need a secure server and database.</p></div>
+        <div class="listing"><h3>Can the website change my avatar?</h3><p>The connected desktop build listens on this PC for avatar color changes from the website. Start the game, sign in to the local profile, then use Avatar Appearance.</p></div>
+        <div class="listing"><h3>Can I launch the game from this site?</h3><p>The desktop EXE download and launch flow haven't been connected yet.</p></div>
+      </section>
+    </main>
+  </div>
+  <footer class="footer">
+    CUBEWICK — The Classic Building World · Independent project.<br>
+    <a href="#" data-page="help">Help</a> &nbsp;|&nbsp; <a href="#" data-page="parents">Privacy</a> &nbsp;|&nbsp; <a href="#" data-page="news">News</a>
+    <p style="margin:6px 0 0">Prototype note: sign-in and posts use this browser's local storage. Don't reuse real passwords. A public launch needs server-side authentication.</p>
+  </footer>
+</div>
+
+<div id="dialogRoot" class="hidden"></div>
+<div id="toast" class="hidden" style="position:fixed;bottom:15px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:10px 15px;border:1px solid #555;max-width:min(600px,94vw);z-index:20"></div>
+
+<script>
+(() => {
+  "use strict";
+  const ACCOUNTS_KEY = "cubewick_demo_accounts_v1";
+  const SESSION_KEY = "cubewick_demo_session_v1";
+  const POSTS_KEY = "cubewick_demo_forum_v1";
+  const FAV_KEY = "cubewick_demo_favorites_v1";
+  const AVATAR_COLOR_KEY = "cubewick_avatar_color_v1";
+  const AVATAR_BRIDGE = "http://127.0.0.1:47821";
+  let avatarSendTimer = null;
+  const $ = (id) => document.getElementById(id);
+  let currentUser = localStorage.getItem(SESSION_KEY) || "";
+  let toastTimer = null;
+
+  function readJson(key, fallback) {
+    try { const value = JSON.parse(localStorage.getItem(key)); return value ?? fallback; }
+    catch (_) { return fallback; }
+  }
+  function saveJson(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
+  function accounts() { return readJson(ACCOUNTS_KEY, []); }
+  function currentAccount() {
+    return accounts().find(a => a.username.toLowerCase() === currentUser.toLowerCase()) || null;
+  }
+  function cleanText(value) {
+    return String(value).replace(/[&<>"']/g, ch => ({
+      "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+    }[ch]));
+  }
+  function toast(message) {
+    $("toast").textContent = message;
+    $("toast").classList.remove("hidden");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => $("toast").classList.add("hidden"), 3500);
+  }
+  function page(name) {
+    const valid = ["home","profile","games","catalog","membership","browse","forum","news","parents","help"];
+    if (!valid.includes(name)) name = "home";
+    document.querySelectorAll("[id^='page-']").forEach(el => el.classList.add("hidden"));
+    $("page-" + name).classList.remove("hidden");
+    if (name === "profile") renderProfile();
+    if (name === "forum") renderForum();
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+  document.querySelectorAll("[data-page]").forEach(el => el.addEventListener("click", e => {
+    e.preventDefault();
+    page(el.getAttribute("data-page"));
+  }));
+
+  function showDialog(title, bodyHtml) {
+    $("dialogRoot").innerHTML = `
+      <div class="dialog-backdrop" role="presentation">
+        <section class="dialog" role="dialog" aria-modal="true" aria-label="${cleanText(title)}">
+          <div class="dialog-head"><span>${cleanText(title)}</span><button class="close-x" type="button" aria-label="Close">×</button></div>
+          <div class="dialog-body">${bodyHtml}</div>
+        </section>
+      </div>`;
+    $("dialogRoot").classList.remove("hidden");
+    $("dialogRoot").querySelector(".close-x").addEventListener("click", closeDialog);
+    $("dialogRoot").querySelector(".dialog-backdrop").addEventListener("click", e => {
+      if (e.target.classList.contains("dialog-backdrop")) closeDialog();
+    });
+    const first = $("dialogRoot").querySelector("input");
+    if (first) first.focus();
+  }
+  function closeDialog() {
+    $("dialogRoot").classList.add("hidden");
+    $("dialogRoot").innerHTML = "";
+  }
+  function signup() {
+    showDialog("Create a CUBEWICK Account", `
+      <p>Choose a character name to join CUBEWICK.</p>
+      <form id="signupForm">
+        <div class="form-field"><label for="newUser">Character Name</label><input id="newUser" name="username" required minlength="3" maxlength="20" pattern="[A-Za-z0-9_]+" autocomplete="username"><span class="muted">3–20 letters, numbers, or underscores.</span></div>
+        <div class="form-field"><label for="newPass">Password</label><input id="newPass" name="password" type="password" required minlength="6" maxlength="80" autocomplete="new-password"><span class="muted">At least 6 characters for this demo.</span></div>
+        <div class="form-field"><label for="confirmPass">Confirm Password</label><input id="confirmPass" name="confirmPassword" type="password" required minlength="6" maxlength="80" autocomplete="new-password"></div>
+        <div id="signupMessage" aria-live="polite"></div>
+        <div class="form-actions"><button type="submit">Create Account</button><button class="secondary" type="button" id="cancelSignup">Cancel</button></div>
+      </form>
+      <p class="muted">Demo only: account data stays in this browser and is not secure enough for a public website.</p>
+    `);
+    $("cancelSignup").addEventListener("click", closeDialog);
+    $("signupForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const username = $("newUser").value.trim();
+      const password = $("newPass").value;
+      const confirmPassword = $("confirmPass").value;
+      const msg = $("signupMessage");
+      if (!/^[A-Za-z0-9_]{3,20}$/.test(username)) {
+        msg.innerHTML = '<div class="error">Use 3–20 letters, numbers, or underscores.</div>'; return;
+      }
+      if (password.length < 6) {
+        msg.innerHTML = '<div class="error">Password must be at least 6 characters.</div>'; return;
+      }
+      if (password !== confirmPassword) {
+        msg.innerHTML = '<div class="error">The passwords do not match.</div>'; return;
+      }
+      const list = accounts();
+      if (list.some(a => a.username.toLowerCase() === username.toLowerCase())) {
+        msg.innerHTML = '<div class="error">That character name is already taken in this browser.</div>'; return;
+      }
+      list.push({username, password, joined: new Date().toISOString(), status:"Ready to build"});
+      saveJson(ACCOUNTS_KEY, list);
+      currentUser = username;
+      localStorage.setItem(SESSION_KEY, username);
+      closeDialog();
+      refreshAccountUI();
+      page("profile");
+      toast("Welcome to CUBEWICK, " + username + "!");
+    });
+  }
+  function login(username, password) {
+    const match = accounts().find(a => a.username.toLowerCase() === username.trim().toLowerCase() && a.password === password);
+    if (!match) return false;
+    currentUser = match.username;
+    localStorage.setItem(SESSION_KEY, currentUser);
+    refreshAccountUI();
+    return true;
+  }
+  function logout() {
+    currentUser = "";
+    localStorage.removeItem(SESSION_KEY);
+    refreshAccountUI();
+    page("home");
+    toast("You have logged out.");
+  }
+  function refreshAccountUI() {
+    const acct = currentAccount();
+    if (acct) {
+      $("loginHeading").textContent = "Welcome, " + acct.username;
+      $("loginForm").classList.add("hidden");
+      $("loginMessage").innerHTML = '<div class="success">You are signed in on this browser.</div><div class="form-actions"><button class="small" id="openProfileBtn">My Profile</button><button class="secondary small" id="logoutBtn">Logout</button></div>';
+      $("openProfileBtn").addEventListener("click", () => page("profile"));
+      $("logoutBtn").addEventListener("click", logout);
+      $("accountBox").classList.add("hidden");
+      $("topSignup").textContent = "My CUBEWICK >";
+      $("topSignup").onclick = () => page("profile");
+      $("topNote").textContent = "Signed in as " + acct.username;
+    } else {
+      $("loginHeading").textContent = "Member Login";
+      $("loginForm").classList.remove("hidden");
+      $("loginMessage").innerHTML = "";
+      $("accountBox").classList.remove("hidden");
+      $("topSignup").textContent = "Sign Up and Play >";
+      $("topSignup").onclick = signup;
+      $("topNote").textContent = "Build places. Play alone. Make something classic.";
+    }
+  }
+  $("loginForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const ok = login($("loginUser").value, $("loginPass").value);
+    if (!ok) {
+      $("loginMessage").innerHTML = '<div class="error">That name and password were not found in this browser.</div>';
+      return;
+    }
+    $("loginPass").value = "";
+    page("profile");
+    toast("Welcome back, " + currentUser + "!");
+  });
+  $("topSignup").addEventListener("click", signup);
+  $("sideSignup").addEventListener("click", signup);
+  $("homeSignup").addEventListener("click", signup);
+  $("forgotBtn").addEventListener("click", () => showDialog("Password Help", '<p>This local demo has no email reset service. If you forget the demo password, you can clear the site data and create a new demo account.</p><div class="form-actions"><button type="button" id="closePasswordHelp">Close</button></div>'));
+  document.addEventListener("click", e => {
+    if (e.target && e.target.id === "closePasswordHelp") closeDialog();
+  });
+
+  document.querySelectorAll("[data-toast]").forEach(btn => btn.addEventListener("click", () => toast(btn.getAttribute("data-toast"))));
+
+  function avatarHexToRgb(hex) {
+    const safe = /^#[0-9a-fA-F]{6}$/.test(hex) ? hex : "#2f71d5";
+    return {
+      r: parseInt(safe.slice(1, 3), 16),
+      g: parseInt(safe.slice(3, 5), 16),
+      b: parseInt(safe.slice(5, 7), 16)
+    };
+  }
+  async function checkAvatarBridge() {
+    const status = $("avatarBridgeStatus");
+    if (!status) return false;
+    status.className = "notice";
+    status.textContent = "Checking for CUBEWICK...";
+    try {
+      const response = await fetch(AVATAR_BRIDGE + "/status", {
+        method: "GET", cache: "no-store", mode: "cors"
+      });
+      if (!response.ok) throw new Error("Bridge returned an error");
+      const data = await response.json();
+      status.className = "success";
+      status.textContent = "Connected to CUBEWICK. Choose a color to update the character.";
+      if (data.active && $("avatarColor") && !$("avatarColor").dataset.userChanged) {
+        const hex = "#" + [data.r, data.g, data.b]
+          .map(v => Number(v).toString(16).padStart(2, "0")).join("");
+        $("avatarColor").value = hex;
+        $("avatarHex").textContent = hex;
+        localStorage.setItem(AVATAR_COLOR_KEY, hex);
+      }
+      const savedColor = localStorage.getItem(AVATAR_COLOR_KEY);
+      if (savedColor) await transmitAvatarColor(savedColor);
+      return true;
+    } catch (_) {
+      status.className = "notice";
+      status.textContent = "CUBEWICK not detected. Start the connected CUBEWICK game on this PC, then check again.";
+      return false;
+    }
+  }
+  async function transmitAvatarColor(hex) {
+    const status = $("avatarBridgeStatus");
+    const rgb = avatarHexToRgb(hex);
+    localStorage.setItem(AVATAR_COLOR_KEY, hex);
+    if ($("avatarHex")) $("avatarHex").textContent = hex;
+    if (status) {
+      status.className = "notice";
+      status.textContent = "Sending color to CUBEWICK...";
+    }
+    try {
+      const url = `${AVATAR_BRIDGE}/setColor?r=${rgb.r}&g=${rgb.g}&b=${rgb.b}`;
+      const response = await fetch(url, { method: "GET", cache: "no-store", mode: "cors" });
+      if (!response.ok) throw new Error("Bridge returned an error");
+      const data = await response.json();
+      if (!data.ok) throw new Error("The game did not accept this color");
+      if (status) {
+        status.className = "success";
+        status.textContent = "Avatar color updated in the running CUBEWICK game!";
+      }
+      return true;
+    } catch (_) {
+      if (status) {
+        status.className = "error";
+        status.textContent = "Couldn't reach the game. Keep this website open, start the connected CUBEWICK build, and try again.";
+      }
+      return false;
+    }
+  }
+
+  function renderProfile() {
+    const root = $("profileContent");
+    const acct = currentAccount();
+    if (!acct) {
+      root.innerHTML = `<div class="text-panel"><h2>You aren't signed in.</h2><p>Log in or make a CUBEWICK account to view your profile.</p><button type="button" id="profileSignup">Create an Account</button></div>`;
+      $("profileSignup").addEventListener("click", signup);
+      return;
+    }
+    const date = new Date(acct.joined).toLocaleDateString();
+    root.innerHTML = `
+      <div class="text-panel"><h2>${cleanText(acct.username)}</h2><p>Welcome to your classic CUBEWICK profile.</p>
+      <div class="profile-stats"><div class="stat"><b>1</b>Account</div><div class="stat"><b>0</b>Friends</div><div class="stat"><b>0</b>Places</div></div>
+      <hr class="rule"><p><b>Character Name:</b> ${cleanText(acct.username)}</p><p><b>Joined:</b> ${cleanText(date)}</p>
+      <form id="statusForm"><div class="form-field"><label for="statusText">Profile Status</label><input id="statusText" maxlength="100" value="${cleanText(acct.status || "")}"></div><button type="submit">Update Status</button></form>
+      <hr class="rule">
+      <div class="text-panel blue">
+        <h2>Avatar Appearance</h2>
+        <p>Choose a character color. With CUBEWICK running on this same computer using the connected build, the color will update in-game.</p>
+        <div class="account-line">
+          <label for="avatarColor"><b>Avatar Color:</b></label>
+          <input id="avatarColor" type="color" value="${cleanText(localStorage.getItem(AVATAR_COLOR_KEY) || "#2f71d5")}" style="width:62px;height:36px;padding:2px;cursor:pointer">
+          <span id="avatarHex" style="font-weight:bold">${cleanText(localStorage.getItem(AVATAR_COLOR_KEY) || "#2f71d5")}</span>
+          <button type="button" class="small" id="applyAvatarColor">Apply Color</button>
+          <button type="button" class="secondary small" id="checkAvatarConnection">Check Game</button>
+        </div>
+        <div id="avatarBridgeStatus" class="notice" role="status">Checking for CUBEWICK...</div>
+        <p class="muted">For now, the website and game must be open on the same PC. A public hosted website will need a secure account/server connection for remote syncing.</p>
+      </div>
+      <div class="form-actions" style="justify-content:flex-start"><button type="button" class="secondary" id="profileLogout">Logout</button></div></div>`;
+    $("statusForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const list = accounts();
+      const entry = list.find(a => a.username.toLowerCase() === currentUser.toLowerCase());
+      if (entry) { entry.status = $("statusText").value.trim(); saveJson(ACCOUNTS_KEY, list); toast("Profile status updated."); }
+    });
+    const avatarPicker = $("avatarColor");
+    avatarPicker.addEventListener("input", () => {
+      avatarPicker.dataset.userChanged = "1";
+      $("avatarHex").textContent = avatarPicker.value;
+      localStorage.setItem(AVATAR_COLOR_KEY, avatarPicker.value);
+      if (avatarSendTimer) clearTimeout(avatarSendTimer);
+      avatarSendTimer = setTimeout(() => transmitAvatarColor(avatarPicker.value), 180);
+    });
+    $("applyAvatarColor").addEventListener("click", () => transmitAvatarColor(avatarPicker.value));
+    $("checkAvatarConnection").addEventListener("click", checkAvatarBridge);
+    checkAvatarBridge();
+    $("profileLogout").addEventListener("click", logout);
+  }
+
+  function renderForum() {
+    const posts = readJson(POSTS_KEY, []);
+    const root = $("forumPosts");
+    if (!posts.length) {
+      root.innerHTML = '<div class="listing"><b>No messages yet.</b><p>Start the first local discussion above.</p></div>'; return;
+    }
+    root.innerHTML = posts.slice().reverse().map(post => `
+      <div class="listing"><h3>${cleanText(post.title)}</h3>
+      <p>${cleanText(post.body).replace(/\n/g,"<br>")}</p>
+      <div class="muted">Posted by ${cleanText(post.author)} · ${cleanText(new Date(post.date).toLocaleString())}</div></div>`).join("");
+  }
+  $("forumForm").addEventListener("submit", e => {
+    e.preventDefault();
+    if (!currentAccount()) {
+      toast("Create an account or log in before posting.");
+      signup(); return;
+    }
+    const title = $("forumTitle").value.trim();
+    const body = $("forumBody").value.trim();
+    if (!title || !body) return;
+    const posts = readJson(POSTS_KEY, []);
+    posts.push({title,body,author:currentUser,date:new Date().toISOString()});
+    saveJson(POSTS_KEY, posts.slice(-100));
+    $("forumTitle").value = ""; $("forumBody").value = "";
+    renderForum(); toast("Message posted in this browser.");
+  });
+
+  $("browseFilter").addEventListener("input", () => {
+    const term = $("browseFilter").value.trim().toLowerCase();
+    let visible = 0;
+    document.querySelectorAll("#browseResults [data-search]").forEach(card => {
+      const match = (card.getAttribute("data-search") + " " + card.textContent).toLowerCase().includes(term);
+      card.classList.toggle("hidden", !match);
+      if (match) visible++;
+    });
+    $("noBrowseResults").classList.toggle("hidden", visible !== 0);
+  });
+
+  // Favorites intentionally remain local to this browser.
+  document.querySelectorAll("#page-catalog [data-toast]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const favorites = readJson(FAV_KEY, []);
+      const name = btn.closest(".listing").querySelector("h3").textContent;
+      if (!favorites.includes(name)) favorites.push(name);
+      saveJson(FAV_KEY, favorites);
+      toast(name + " saved to demo favorites.");
+    });
+  });
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && !$("dialogRoot").classList.contains("hidden")) closeDialog();
+  });
+  refreshAccountUI();
+})();
+</script>
+</body>
+</html>
